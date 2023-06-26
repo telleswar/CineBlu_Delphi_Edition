@@ -58,12 +58,11 @@ type
     lbNomeUsu: TLabel;
     procedure pnBtnMouseEnter(Sender: TObject);
     procedure pnBtnMouseLeave(Sender: TObject);
-    procedure pnBtnRegisterClick(Sender: TObject);
+    procedure ProcessoLoginCadClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ItemMenuSetSelected(Sender: TObject);
     procedure lbItemMenuClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
-    procedure pnBtnLoginClick(Sender: TObject);
     procedure pnBtnLogoutClick(Sender: TObject);
   private
     FState : TLoginState;
@@ -131,7 +130,7 @@ begin
      lbFeedback.Font.Color := $00000090;
 end;
 
-procedure TfrTelaLogin.pnBtnRegisterClick(Sender: TObject);
+procedure TfrTelaLogin.ProcessoLoginCadClick(Sender: TObject);
 var
   wUsuario : TUsuario;
 begin
@@ -139,32 +138,37 @@ begin
   try
     wUsuario.nome_usuario := edUsuario.Text;
     wUsuario.senha_usuario := edSenha.Text;
-    if wUsuario.salvar then
+    if Sender = pnBtnRegister then
     begin
-      edUsuario.Text := '';
-      edSenha.Text := '';
+      if wUsuario.salvar then
+      begin
+        edUsuario.Text := '';
+        edSenha.Text := '';
+      end;
+    end
+    else
+    begin
+      if wUsuario.logar then
+      begin
+        edUsuario.Text := '';
+        edSenha.Text := '';
+        Logar;
+      end;
     end;
+
   finally
     ControleMensagens(wUsuario.fMsgExec);
   end;
 end;
 
-procedure TfrTelaLogin.pnBtnLoginClick(Sender: TObject);
-var
-  wUsuario : TUsuario;
+procedure TfrTelaLogin.FormShow(Sender: TObject);
 begin
-  wUsuario := TUsuario.GetInstance;
+  FState := TDeslogadoState.Create(Self);
+  DMBanco := TDataModule1.Create(Self);
   try
-    wUsuario.nome_usuario := edUsuario.Text;
-    wUsuario.senha_usuario := edSenha.Text;
-    if wUsuario.logar then
-    begin
-      edUsuario.Text := '';
-      edSenha.Text := '';
-      Logar;
-    end;
-  finally
-    ControleMensagens(wUsuario.fMsgExec);
+    DMBanco.ConBD.Connected := True;
+  except on E: Exception do
+    ShowMessage('Erro ao conectar no banco: ' + E.Message);
   end;
 end;
 
@@ -183,17 +187,6 @@ end;
 procedure TfrTelaLogin.lbItemMenuClick(Sender: TObject);
 begin
   ItemMenuSetSelected(TLabel(Sender).Parent);
-end;
-
-procedure TfrTelaLogin.FormShow(Sender: TObject);
-begin
-  FState := TDeslogadoState.Create(Self);
-  DMBanco := TDataModule1.Create(Self);
-  try
-    DMBanco.ConBD.Connected := True;
-  except on E: Exception do
-    ShowMessage('Erro ao conectar no banco: ' + E.Message);
-  end;
 end;
 
 procedure TfrTelaLogin.pnBtnMouseEnter(Sender: TObject);
