@@ -5,9 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
-  Vcl.StdCtrls, Vcl.Imaging.jpeg, IWVCLBaseControl, IWBaseControl,
-  IWBaseHTMLControl, IWControl, IWCompRectangle, uUsuario, System.Hash,
-  Vcl.Buttons, DMBanco;
+  Vcl.StdCtrls, Vcl.Imaging.jpeg,uUsuario, System.Hash,
+  Vcl.Buttons, DMBanco, uConsultaGrid, uAdapters;
 
 type
   TLoginState = class;
@@ -56,6 +55,7 @@ type
     pnLeftInfoUser: TPanel;
     pnBtnLogout: TPanel;
     lbNomeUsu: TLabel;
+    btnCloseHead: TSpeedButton;
     procedure pnBtnMouseEnter(Sender: TObject);
     procedure pnBtnMouseLeave(Sender: TObject);
     procedure ProcessoLoginCadClick(Sender: TObject);
@@ -66,6 +66,7 @@ type
     procedure pnBtnLogoutClick(Sender: TObject);
   private
     FState : TLoginState;
+    FTelaConsulta :  TfrConsulta;
   public
     DMBanco : TDataModule1;
     procedure ControleMensagens(prMsg : String);
@@ -165,6 +166,10 @@ procedure TfrTelaLogin.FormShow(Sender: TObject);
 begin
   FState := TDeslogadoState.Create(Self);
   DMBanco := TDataModule1.Create(Self);
+//  //Login automatico
+//  edUsuario.Text := 'antony';
+//  edSenha.Text := '123';
+//  ProcessoLoginCadClick(pnBtnLogin);
   try
     DMBanco.ConBD.Connected := True;
   except on E: Exception do
@@ -184,9 +189,39 @@ begin
   shpItemSelected.Repaint;
 
   case TPanel(Sender).Tag of
-    pnItemMenuFilmes.Tag:begin
-      lbTitTela.Caption := 'To vendo filmes';
-      Break;
+    1:begin
+      lbTipoTela.Caption := 'Consulta';
+      lbTitTela.Caption := 'Ver Filmes';
+      if not Assigned(FTelaConsulta) then
+      begin
+        FTelaConsulta := TfrConsulta.Create(self);
+        FTelaConsulta.Parent := pnRightBody;
+      end;
+      if Assigned(FTelaConsulta.FAdapter) then
+         FTelaConsulta.FAdapter.Free;
+      FTelaConsulta.FAdapter := TFilmesAdapter.Create(Self);
+      FTelaConsulta.FAdapter.SetDBGrid(FTelaConsulta.DbGrid);
+      FTelaConsulta.FAdapter.Consulta;
+      FTelaConsulta.Show;
+    end;
+    2:begin
+      lbTipoTela.Caption := 'Consulta';
+      lbTitTela.Caption := 'Meus ingressos';
+      if not Assigned(FTelaConsulta) then
+      begin
+         FTelaConsulta := TfrConsulta.Create(self);
+         FTelaConsulta.Parent := pnRightBody;
+      end;
+      if Assigned(FTelaConsulta.FAdapter) then
+         FTelaConsulta.FAdapter.Free;
+      FTelaConsulta.FAdapter := TRecibosAdapter.Create(Self);
+      FTelaConsulta.FAdapter.SetDBGrid(FTelaConsulta.DbGrid);
+      FTelaConsulta.FAdapter.Consulta;
+      FTelaConsulta.Show;
+    end;
+    3: begin
+      lbTipoTela.Caption := 'Compra';
+      lbTitTela.Caption := 'Comprar ingresso';
     end;
   end;
 end;
@@ -238,11 +273,12 @@ begin
   begin
     //Esconder tela de login
     pnLeftForm.Visible := False;
+    btnClose.Visible := False;
 
     //Mostrar menu
     pnRightHead.Visible := True;
     pnRightBody.Visible := True;
-    pnRightBottom.Visible := True;
+    pnRightBottom.Visible := False;
     pnLeftMenu.Visible := True;
     shpItemSelected.Visible := True;
     pnLeftInfoUser.Visible := True;
@@ -272,6 +308,7 @@ begin
   begin
     //Esconder tela de login
     pnLeftForm.Visible := True;
+    btnClose.Visible := True;
 
     //Mostrar menu
     pnRightHead.Visible := False;
