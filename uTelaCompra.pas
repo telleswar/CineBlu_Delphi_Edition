@@ -24,6 +24,7 @@ type
     cbDBFilmes: TDBLookupComboBox;
     cbDBSessao: TDBLookupComboBox;
     cbDBHorario: TDBLookupComboBox;
+    lbValor: TLabel;
     procedure btnCloseHeadClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cbDBSessaoCloseUp(Sender: TObject);
@@ -198,21 +199,37 @@ begin
      (Trim(VarToStr(cbDBHorario.KeyValue)) <> '') and
      (Trim(edAssento.Text) <> '') then
   begin
+    fQuery.SQL.Clear;
+    fQuery.SQL.Add('select count(*) from recibos rec where rec.id_sessao = :id_sessao '+
+                   ' and  rec.cadeira = :assento having count(*) > 0;');
+    fQuery.ParamByName('id_sessao').AsInteger := cbDBHorario.ListSource.DataSet.FieldByName('id').AsInteger;
+    fQuery.ParamByName('assento').AsString := Trim(edAssento.Text);
+    fQuery.Open();
+
+    if not fQuery.IsEmpty then
+    begin
+      ShowMessage('Assento já ocupado!');
+      edAssento.SetFocus;
+      Exit;
+    end;
+
+    fQuery.SQL.Clear;
     fQuery.SQL.Add(' INSERT INTO RECIBOS (ID_SESSAO, DATA, HORA, CADEIRA, VALOR, FORMA_PAGAMENTO) ' +
                ' VALUES (:ID_SESSAO, :DATA, :HORA, :CADEIRA, :VALOR, :FORMA_PAGAMENTO); ');
 
     fQuery.ParamByName('ID_SESSAO').AsInteger := cbDBHorario.ListSource.DataSet.FieldByName('id').AsInteger;
     fQuery.ParamByName('DATA').AsDateTime := cbDBSessao.ListSource.DataSet.FieldByName('data').AsDateTime;
     fQuery.ParamByName('HORA').AsTime := cbDBHorario.ListSource.DataSet.FieldByName('HORA_INCIO').AsDateTime;
-    fQuery.ParamByName('CADEIRA').AsString := edAssento.Text;
+    fQuery.ParamByName('CADEIRA').AsString := Trim(edAssento.Text);
     fQuery.ParamByName('VALOR').AsFloat := 25;
     fQuery.ParamByName('FORMA_PAGAMENTO').AsString := cbFormaPagamento.Text;
 
     fQuery.ExecSQL;
-    ShowMessage('Compra feita com sucesso!');
+    ShowMessage('Compra concluída com sucesso!');
     LimparCombo(cbDBHorario, 1);
     LimparCombo(cbDBFilmes, 1);
     LimparCombo(cbDBSessao, 2);
+    edAssento.Text := '';
   end
   else
     ShowMessage('Preencha todos os campos!');

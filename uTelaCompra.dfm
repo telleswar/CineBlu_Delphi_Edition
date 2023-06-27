@@ -63,7 +63,7 @@ object frTelaCompra: TfrTelaCompra
       Left = 241
       Top = 32
       Width = 271
-      Height = 513
+      Height = 539
       Anchors = [akTop]
       BevelOuter = bvNone
       TabOrder = 1
@@ -152,6 +152,23 @@ object frTelaCompra: TfrTelaCompra
         ParentFont = False
         ExplicitWidth = 216
       end
+      object lbValor: TLabel
+        AlignWithMargins = True
+        Left = 3
+        Top = 443
+        Width = 265
+        Height = 17
+        Margins.Bottom = 0
+        Align = alTop
+        Caption = 'Valor : R$ 25,00'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 3421399
+        Font.Height = -13
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 128
+      end
       object edAssento: TEdit
         AlignWithMargins = True
         Left = 3
@@ -182,7 +199,7 @@ object frTelaCompra: TfrTelaCompra
       object pnBtnRealizarCompra: TPanel
         AlignWithMargins = True
         Left = 3
-        Top = 470
+        Top = 490
         Width = 265
         Height = 33
         Cursor = crHandPoint
@@ -202,6 +219,7 @@ object frTelaCompra: TfrTelaCompra
         OnClick = pnBtnRealizarCompraClick
         OnMouseEnter = pnBtnMouseEnter
         OnMouseLeave = pnBtnMouseLeave
+        ExplicitTop = 470
       end
       object cbDBFilmes: TDBLookupComboBox
         AlignWithMargins = True
