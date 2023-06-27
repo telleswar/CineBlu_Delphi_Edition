@@ -182,6 +182,13 @@ procedure TfrTelaLogin.ItemMenuSetSelected(Sender: TObject);
 begin
   shpItemSelected.Top := pnLeftMenu.Top + TPanel(Sender).Top - (TPanel(Sender).Margins.Top - 5);
   shpItemSelected.Repaint;
+
+  case TPanel(Sender).Tag of
+    pnItemMenuFilmes.Tag:begin
+      lbTitTela.Caption := 'To vendo filmes';
+      Break;
+    end;
+  end;
 end;
 
 procedure TfrTelaLogin.lbItemMenuClick(Sender: TObject);
