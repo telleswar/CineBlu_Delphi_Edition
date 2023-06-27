@@ -6,12 +6,12 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
   Vcl.StdCtrls, Vcl.Imaging.jpeg,uUsuario, System.Hash,
-  Vcl.Buttons, DMBanco, uConsultaGrid, uAdapters;
+  Vcl.Buttons, DMBanco, uConsultaGrid, uAdapters, uTelaCompra;
 
 type
   TLoginState = class;
 
-  TfrTelaLogin = class(TForm)
+  TfrTelaPrincipal = class(TForm)
     pnMain: TPanel;
     pnLeftSide: TPanel;
     pnLeftHead: TPanel;
@@ -67,6 +67,7 @@ type
   private
     FState : TLoginState;
     FTelaConsulta :  TfrConsulta;
+    FTelaCompra : TfrTelaCompra;
   public
     DMBanco : TDataModule1;
     procedure ControleMensagens(prMsg : String);
@@ -76,8 +77,8 @@ type
 
   TLoginState = class abstract
   protected
-    FTelaLogin: TfrTelaLogin;
-    constructor Create(ATelaLogin: TfrTelaLogin); virtual;
+    FTelaLogin: TfrTelaPrincipal;
+    constructor Create(ATelaLogin: TfrTelaPrincipal); virtual;
   public
     procedure Logar; virtual; abstract;
     procedure Deslogar; virtual; abstract;
@@ -96,29 +97,29 @@ type
   end;
 
 var
-  frTelaLogin: TfrTelaLogin;
+  frTelaPrincipal: TfrTelaPrincipal;
 
 implementation
 
 {$R *.dfm}
 
 {$REGION 'Tela de login'}
-procedure TfrTelaLogin.btnCloseClick(Sender: TObject);
+procedure TfrTelaPrincipal.btnCloseClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrTelaLogin.Deslogar;
+procedure TfrTelaPrincipal.Deslogar;
 begin
   FState.Deslogar;
 end;
 
-procedure TfrTelaLogin.Logar;
+procedure TfrTelaPrincipal.Logar;
 begin
   FState.Logar;
 end;
 
-procedure TfrTelaLogin.ControleMensagens(prMsg: String);
+procedure TfrTelaPrincipal.ControleMensagens(prMsg: String);
 begin
   lbFeedback.Visible := prMsg <> '';
   if not lbFeedback.Visible then
@@ -131,7 +132,7 @@ begin
      lbFeedback.Font.Color := $00000090;
 end;
 
-procedure TfrTelaLogin.ProcessoLoginCadClick(Sender: TObject);
+procedure TfrTelaPrincipal.ProcessoLoginCadClick(Sender: TObject);
 var
   wUsuario : TUsuario;
 begin
@@ -162,7 +163,7 @@ begin
   end;
 end;
 
-procedure TfrTelaLogin.FormShow(Sender: TObject);
+procedure TfrTelaPrincipal.FormShow(Sender: TObject);
 begin
   FState := TDeslogadoState.Create(Self);
   DMBanco := TDataModule1.Create(Self);
@@ -177,13 +178,33 @@ begin
   end;
 end;
 
-procedure TfrTelaLogin.pnBtnLogoutClick(Sender: TObject);
+procedure TfrTelaPrincipal.pnBtnLogoutClick(Sender: TObject);
 begin
   TUsuario.GetInstance.Destroy;
   Deslogar;
 end;
 
-procedure TfrTelaLogin.ItemMenuSetSelected(Sender: TObject);
+procedure TfrTelaPrincipal.ItemMenuSetSelected(Sender: TObject);
+
+  procedure ChamaTelaConsulta(prAdapter: TAdapter);
+  begin
+    if Assigned(FTelaCompra) then
+       FTelaCompra.Close;
+
+    if not Assigned(FTelaConsulta) then
+    begin
+       FTelaConsulta := TfrConsulta.Create(self);
+       FTelaConsulta.Parent := pnRightBody;
+    end;
+
+    if Assigned(FTelaConsulta.FAdapter) then
+       FTelaConsulta.FAdapter.Free;
+    FTelaConsulta.FAdapter := prAdapter;
+    FTelaConsulta.FAdapter.SetDBGrid(FTelaConsulta.DbGrid);
+    FTelaConsulta.FAdapter.Consulta;
+    FTelaConsulta.Show;
+  end;
+
 begin
   shpItemSelected.Top := pnLeftMenu.Top + TPanel(Sender).Top - (TPanel(Sender).Margins.Top - 5);
   shpItemSelected.Repaint;
@@ -192,51 +213,40 @@ begin
     1:begin
       lbTipoTela.Caption := 'Consulta';
       lbTitTela.Caption := 'Ver Filmes';
-      if not Assigned(FTelaConsulta) then
-      begin
-        FTelaConsulta := TfrConsulta.Create(self);
-        FTelaConsulta.Parent := pnRightBody;
-      end;
-      if Assigned(FTelaConsulta.FAdapter) then
-         FTelaConsulta.FAdapter.Free;
-      FTelaConsulta.FAdapter := TFilmesAdapter.Create(Self);
-      FTelaConsulta.FAdapter.SetDBGrid(FTelaConsulta.DbGrid);
-      FTelaConsulta.FAdapter.Consulta;
-      FTelaConsulta.Show;
+      ChamaTelaConsulta(TFilmesAdapter.Create(Self));
     end;
     2:begin
       lbTipoTela.Caption := 'Consulta';
       lbTitTela.Caption := 'Meus ingressos';
-      if not Assigned(FTelaConsulta) then
-      begin
-         FTelaConsulta := TfrConsulta.Create(self);
-         FTelaConsulta.Parent := pnRightBody;
-      end;
-      if Assigned(FTelaConsulta.FAdapter) then
-         FTelaConsulta.FAdapter.Free;
-      FTelaConsulta.FAdapter := TRecibosAdapter.Create(Self);
-      FTelaConsulta.FAdapter.SetDBGrid(FTelaConsulta.DbGrid);
-      FTelaConsulta.FAdapter.Consulta;
-      FTelaConsulta.Show;
+      ChamaTelaConsulta(TRecibosAdapter.Create(Self));
     end;
     3: begin
       lbTipoTela.Caption := 'Compra';
       lbTitTela.Caption := 'Comprar ingresso';
+      if Assigned(FTelaConsulta) then
+         FTelaConsulta.Close;
+      if not Assigned(FTelaCompra) then
+      begin
+         FTelaCompra := TfrTelaCompra.Create(self);
+         FTelaCompra.Parent := pnRightBody;
+      end;
+      FTelaCompra.Show;
     end;
   end;
 end;
 
-procedure TfrTelaLogin.lbItemMenuClick(Sender: TObject);
+
+procedure TfrTelaPrincipal.lbItemMenuClick(Sender: TObject);
 begin
   ItemMenuSetSelected(TLabel(Sender).Parent);
 end;
 
-procedure TfrTelaLogin.pnBtnMouseEnter(Sender: TObject);
+procedure TfrTelaPrincipal.pnBtnMouseEnter(Sender: TObject);
 begin
   TPanel(Sender).Color := TPanel(Sender).Color + $250E0F;
 end;
 
-procedure TfrTelaLogin.pnBtnMouseLeave(Sender: TObject);
+procedure TfrTelaPrincipal.pnBtnMouseLeave(Sender: TObject);
 begin
   TPanel(Sender).Color := TPanel(Sender).Color - $250E0F;
 end;
@@ -245,7 +255,7 @@ end;
 {$REGION 'Estados da tela'}
 { TUsuarioState }
 
-constructor TLoginState.Create(ATelaLogin: TfrTelaLogin);
+constructor TLoginState.Create(ATelaLogin: TfrTelaPrincipal);
 begin
   FTelaLogin := ATelaLogin;
 end;

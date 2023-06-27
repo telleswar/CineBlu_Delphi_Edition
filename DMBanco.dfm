@@ -12,7 +12,6 @@ object DataModule1: TDataModule1
       'Server=localhost'
       'Port=3050'
       'DriverID=FB')
-    Connected = True
     LoginPrompt = False
     Left = 25
     Top = 24

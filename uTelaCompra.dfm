@@ -1,0 +1,250 @@
+object frTelaCompra: TfrTelaCompra
+  Left = 0
+  Top = 0
+  Align = alClient
+  BorderStyle = bsNone
+  ClientHeight = 557
+  ClientWidth = 761
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poOwnerFormCenter
+  WindowState = wsMaximized
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnCompraBody: TPanel
+    Left = 0
+    Top = 0
+    Width = 761
+    Height = 557
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 0
+    DesignSize = (
+      761
+      557)
+    object pnCompraHead: TPanel
+      Left = 0
+      Top = 0
+      Width = 761
+      Height = 26
+      Align = alTop
+      BevelOuter = bvNone
+      Color = 5526505
+      ParentBackground = False
+      TabOrder = 0
+      object btnCloseHead: TSpeedButton
+        Left = 736
+        Top = 0
+        Width = 25
+        Height = 26
+        Cursor = crHandPoint
+        Align = alRight
+        Caption = 'X'
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        OnClick = btnCloseHeadClick
+        ExplicitLeft = 626
+        ExplicitTop = 3
+        ExplicitHeight = 22
+      end
+    end
+    object pnBodyCenter: TPanel
+      Left = 241
+      Top = 32
+      Width = 271
+      Height = 513
+      Anchors = [akTop]
+      BevelOuter = bvNone
+      TabOrder = 1
+      object lbFilmes: TLabel
+        AlignWithMargins = True
+        Left = 3
+        Top = 30
+        Width = 265
+        Height = 26
+        Margins.Top = 30
+        Align = alTop
+        Caption = 'Filme'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -20
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 60
+      end
+      object lbHorario: TLabel
+        AlignWithMargins = True
+        Left = 3
+        Top = 206
+        Width = 265
+        Height = 26
+        Margins.Top = 30
+        Align = alTop
+        Caption = 'Hor'#225'rio'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -20
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 84
+      end
+      object lb1: TLabel
+        AlignWithMargins = True
+        Left = 3
+        Top = 118
+        Width = 265
+        Height = 26
+        Margins.Top = 30
+        Align = alTop
+        Caption = 'Sess'#227'o'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -20
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 72
+      end
+      object lbAssento: TLabel
+        AlignWithMargins = True
+        Left = 3
+        Top = 294
+        Width = 265
+        Height = 26
+        Margins.Top = 30
+        Align = alTop
+        Caption = 'Assento'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -20
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 84
+      end
+      object lbFormaPagamento: TLabel
+        AlignWithMargins = True
+        Left = 3
+        Top = 382
+        Width = 265
+        Height = 26
+        Margins.Top = 30
+        Align = alTop
+        Caption = 'Forma de pagamento'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -20
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ExplicitWidth = 216
+      end
+      object edAssento: TEdit
+        AlignWithMargins = True
+        Left = 3
+        Top = 328
+        Width = 265
+        Height = 21
+        Margins.Top = 5
+        Align = alTop
+        TabOrder = 3
+      end
+      object cbFormaPagamento: TComboBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 416
+        Width = 265
+        Height = 21
+        Margins.Top = 5
+        Align = alTop
+        ItemIndex = 0
+        TabOrder = 4
+        Text = 'Pix'
+        Items.Strings = (
+          'Pix'
+          'Boleto'
+          'Cart'#227'o de Cr'#233'dito'
+          'Cart'#227'o de D'#233'bito')
+      end
+      object pnBtnRealizarCompra: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 470
+        Width = 265
+        Height = 33
+        Cursor = crHandPoint
+        Margins.Top = 30
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'Realizar compra'
+        Color = 3421399
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'JetBrainsMonoNL NFM'
+        Font.Style = []
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 5
+        OnClick = pnBtnRealizarCompraClick
+        OnMouseEnter = pnBtnMouseEnter
+        OnMouseLeave = pnBtnMouseLeave
+      end
+      object cbDBFilmes: TDBLookupComboBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 64
+        Width = 265
+        Height = 21
+        Margins.Top = 5
+        Align = alTop
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        KeyField = 'id'
+        ListField = 'titulo'
+        TabOrder = 0
+        OnCloseUp = cbDBFilmesCloseUp
+      end
+      object cbDBSessao: TDBLookupComboBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 152
+        Width = 265
+        Height = 21
+        Margins.Top = 5
+        Align = alTop
+        KeyField = 'data'
+        ListField = 'data'
+        ListFieldIndex = 1
+        TabOrder = 1
+        OnCloseUp = cbDBSessaoCloseUp
+      end
+      object cbDBHorario: TDBLookupComboBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 240
+        Width = 265
+        Height = 21
+        Margins.Top = 5
+        Align = alTop
+        KeyField = 'id'
+        ListField = 'HORARIO'
+        TabOrder = 2
+        ExplicitTop = 269
+      end
+    end
+  end
+end
