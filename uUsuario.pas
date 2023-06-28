@@ -37,7 +37,7 @@ uses
 
 { Usuario }
 
-procedure TUsuario.SetConexao;
+ procedure TUsuario.SetConexao;
 begin
   if not Assigned(fQuery) then
      fQuery := TFDQuery.Create(nil);
