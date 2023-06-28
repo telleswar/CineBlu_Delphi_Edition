@@ -7,7 +7,8 @@ uses
   DMBanco in 'DMBanco.pas' {DataModule1: TDataModule},
   uConsultaGrid in 'uConsultaGrid.pas' {frConsulta},
   uAdapters in 'uAdapters.pas',
-  uTelaCompra in 'uTelaCompra.pas' {frTelaCompra};
+  uTelaCompra in 'uTelaCompra.pas' {frTelaCompra},
+  uMessageModal in 'uMessageModal.pas' {frMessageModal};
 
 {$R *.res}
 

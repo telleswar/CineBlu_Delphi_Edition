@@ -25,10 +25,6 @@ object frConsulta: TfrConsulta
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 96
-    ExplicitTop = 96
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object DbGrid: TDBGrid
       Left = 0
       Top = 26
@@ -36,6 +32,7 @@ object frConsulta: TfrConsulta
       Height = 312
       Align = alClient
       BorderStyle = bsNone
+      Color = 16448250
       GradientEndColor = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 5526505

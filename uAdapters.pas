@@ -2,7 +2,7 @@ unit uAdapters;
 
 interface
 uses
- Data.DB, DBClient, System.Classes, Vcl.DBGrids, DMBanco, FireDAC.Comp.Client,FireDAC.DApt;
+ Data.DB, DBClient, System.Classes, Vcl.DBGrids, DMBanco, FireDAC.Comp.Client,FireDAC.DApt, System.SysUtils;
 
 type
   TAdapter = class abstract
@@ -39,7 +39,6 @@ type
   public
     constructor Create(AOwner: TComponent);
     function GetSql: string; override;
-
 
   end;
 
@@ -105,7 +104,7 @@ end;
 
 function TRecibosAdapter.GetSql: string;
 begin
-  Result := 'select rec.id, rec.id_sessao, rec.data, rec.hora, rec.cadeira, rec.valor, rec.forma_pagamento from RECIBOS rec;';
+  Result := 'select rec.id, rec.id_sessao, rec.data, rec.hora, rec.cadeira, '+QuotedStr('R$ ')+' || CAST(rec.valor AS DECIMAL(18,2)) AS valor, rec.forma_pagamento from RECIBOS rec;';
 end;
 
 { TAdapter }

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.DBCtrls, FireDAC.Comp.Client, FireDAC.DApt, DMBanco, Data.DB;
+  Vcl.DBCtrls, FireDAC.Comp.Client, FireDAC.DApt, DMBanco, Data.DB, uMessageModal;
 
 type
   TfrTelaCompra = class(TForm)
@@ -57,7 +57,6 @@ end;
 
 procedure TfrTelaCompra.FormShow(Sender: TObject);
 begin
-  /////
   if not Assigned(fQuery) then
      fQuery := TFDQuery.Create(nil);
   fConexao := TDataModule1.GetInstance.ConBD;
@@ -208,7 +207,7 @@ begin
 
     if not fQuery.IsEmpty then
     begin
-      ShowMessage('Assento já ocupado!');
+      TfrMessageModal.MostrarMensagem(Self,'Alerta','Assento já ocupado!');
       edAssento.SetFocus;
       Exit;
     end;
@@ -225,14 +224,14 @@ begin
     fQuery.ParamByName('FORMA_PAGAMENTO').AsString := cbFormaPagamento.Text;
 
     fQuery.ExecSQL;
-    ShowMessage('Compra concluída com sucesso!');
+    TfrMessageModal.MostrarMensagem(Self,'Confirmação','Compra efetuada com sucesso!', False);
     LimparCombo(cbDBHorario, 1);
     LimparCombo(cbDBFilmes, 1);
     LimparCombo(cbDBSessao, 2);
     edAssento.Text := '';
   end
   else
-    ShowMessage('Preencha todos os campos!');
+    TfrMessageModal.MostrarMensagem(Self,'Alerta','Preencha todos os campos!');
 
 end;
 
